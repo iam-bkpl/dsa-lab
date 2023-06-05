@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 void towerOfHanoi(int n, char source, char destination, char auxiliary)
 {
  if (n == 1)

@@ -1,6 +1,7 @@
 {
- "files.associations": {
-  "*.jsx": "javascript",
-  "stdio.h": "c"
- }
+  "files.associations": {
+    "*.jsx": "javascript",
+    "stdio.h": "c"
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }
