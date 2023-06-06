@@ -130,7 +130,7 @@ int main()
   while (option != 8)
   {
 
-    printf("Enter any number form 1 - 6\n");
+    printf("Enter any number form 1 - 7\n");
     printf("1. insert_at_beginning \n2. insert_at_a_specific_position \n3. insert_at_end \n");
     printf("4. deletion_from_beginning \n5. deletion_from_end \n6. deletion_from_specific_position \n");
     printf("7. display\n");
