@@ -191,7 +191,7 @@ int main()
       printf("Enter any item to insert \n");
       scanf("%d", &item);
       printf("Enter any item position\n");
-      position = scanf("%d", &position);
+      scanf("%d", &position);
       insert_at_specific_position(&head, &tail, position, item);
       break;
 
