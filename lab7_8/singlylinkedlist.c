@@ -102,7 +102,12 @@ int deletion_from_specific_position(node **head, int position)
   ptemp = temp->next;
   item = ptemp->info;
   temp->next = ptemp->next;
+
+  // item = temp->next->info;
+  // temp->next = temp->next->next;
+
   free(ptemp);
+  // free(temp);
   return item;
 }
 
@@ -110,13 +115,13 @@ void traverse(node **head)
 {
   node *temp;
   temp = *head;
-  printf("++++++++++++++ Data in the list is +++++++++++ ");
+  printf("++++++++++++++ Data in the list is +++++++++++ \n");
   while (temp != NULL)
   {
-    printf("\n%d\n", temp->info);
+    printf("%d\n", temp->info);
     temp = temp->next;
   }
-  printf("---------- Data in the list is -----------");
+  printf("---------- Data in the list is -----------\n");
 }
 
 int main()
@@ -146,8 +151,9 @@ int main()
       insert_at_beginning(&head, item);
       break;
     case 2:
-      printf("Enter a item to insert_at_a_specific_position and position \n");
+      printf("Enter a item \n");
       scanf("%d", &item);
+      printf("Enter the position\n");
       scanf("%d", &position);
       insert_at_a_specific_position(&head, item, position);
       break;
