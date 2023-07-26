@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+// Creating a node
 struct Node
 {
     struct Node *left;
@@ -9,6 +11,7 @@ struct Node
 };
 typedef struct Node Node;
 
+// calculating height
 int height(struct Node *node)
 {
     if (node == NULL)
@@ -26,7 +29,7 @@ int max(int a, int b)
 // Creating Node
 struct Node *newNode(int data)
 {
-    struct Node *node = (Node *)malloc(sizeof(Node));
+    Node *node = (Node *)malloc(sizeof(Node));
     node->data = data;
     node->left = NULL;
     node->right = NULL;
@@ -35,7 +38,7 @@ struct Node *newNode(int data)
 }
 
 // Right Rotate
-struct Node *rightRotate(struct Node *y)
+struct Node *rightRotate(Node *y)
 {
     struct Node *x = y->left;
     struct Node *T2 = x->right;
@@ -53,10 +56,10 @@ struct Node *rightRotate(struct Node *y)
 }
 
 // Left Rotate
-struct Node *leftRotate(struct Node *x)
+struct Node *leftRotate(Node *x)
 {
-    struct Node *y = x->right;
-    struct Node *T2 = y->left;
+    Node *y = x->right;
+    Node *T2 = y->left;
 
     // Perform rotation
     y->left = x;
@@ -71,7 +74,7 @@ struct Node *leftRotate(struct Node *x)
 }
 
 // Get Balancing factor
-int getBalance(struct Node *node)
+int getBalance(Node *node)
 {
     if (node == NULL)
     {
@@ -81,7 +84,7 @@ int getBalance(struct Node *node)
 }
 
 // Insertion
-struct Node *insert(struct Node *root, int data)
+struct Node *insertNode(Node *root, int data)
 {
     // Find the correct position to insert the node
     if (root == NULL)
@@ -90,15 +93,147 @@ struct Node *insert(struct Node *root, int data)
     }
     if (data < root->data)
     {
-        root->left = insert(root->left, data);
+        root->left = insertNode(root->left, data);
     }
     else if (data > root->data)
     {
-        root->right = insert(root->right, data);
+        root->right = insertNode(root->right, data);
     }
-    return (root);
+    else
+    {
+        return (root);
+    }
+    // updating the balance factor of each node and also balance the tree
+
+    root->height = 1 + max(height(root->left), height(root->right));
+
+    int balance = getBalance(root);
+
+    if (balance > 1 && data < root->left->data)
+    {
+        return rightRotate(root);
+    }
+    if (balance < -1 && data > root->right->data)
+    {
+        return leftRotate(root);
+    }
+    if (balance > 1 && data > root->left->data)
+    {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+    if (balance < -1 && data < root->right->data)
+    {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+    return root;
 }
 
+struct Node *minValueNode(Node *root)
+{
+    Node *node = root;
+    while (node->left != NULL)
+    {
+        node = node->left;
+    }
+    return node;
+}
+
+// deleting node
+struct Node *deleteNode(Node *root, int data)
+{
+    if (root == NULL)
+    {
+        return root;
+    }
+    if (data < root->data)
+    {
+        root->left = deleteNode(root->left, data);
+    }
+    else if (data > root->data)
+    {
+        root->right = deleteNode(root->right, data);
+    }
+    else
+    {
+        if ((root->left == NULL) || (root->right == NULL))
+        {
+            Node *temp = root->left ? root->left : root->right;
+
+            if (temp->left == NULL)
+            {
+                temp = root;
+                root = NULL;
+            }
+            else
+            {
+                *root = *temp;
+            }
+            free(temp);
+        }
+        else
+        {
+            Node *temp = minValueNode(root->right);
+            root->data = temp->data;
+            root->right = deleteNode(root->right, temp->data);
+        }
+    }
+    if (root == NULL)
+    {
+        return root;
+    }
+
+    root->height = 1 + max(height(root->left), height(root->right));
+    int balance = getBalance(root);
+    if (balance > 1 && getBalance(root->left) >= 0)
+    {
+        return rightRotate(root);
+    }
+    if (balance < -1 && getBalance(root->right) <= 0)
+    {
+        return leftRotate(root);
+    }
+    if (balance > 1 && getBalance(root->left) < 0)
+    {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+    if (balance < -1 && getBalance(root->right) > 0)
+    {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+    return root;
+}
+
+void printPreOrder(Node *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    printf("%d \n", root->data);
+    printPreOrder(root->left);
+    printPreOrder(root->right);
+}
 int main()
 {
+    Node *root = NULL;
+    root = insertNode(root, 2);
+    root = insertNode(root, 1);
+    root = insertNode(root, 7);
+    root = insertNode(root, 4);
+    root = insertNode(root, 5);
+    root = insertNode(root, 3);
+    root = insertNode(root, 8);
+
+    printPreOrder(root);
+
+    // root = deleteNode(root, 2);
+
+    // printf("\n After deleting : \n");
+    // printPreOrder(root);
+
+    return 0;
 }
