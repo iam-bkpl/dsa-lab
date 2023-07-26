@@ -12,7 +12,7 @@ struct Node
 typedef struct Node Node;
 
 // calculating height
-int height(struct Node *node)
+int height(Node *node)
 {
     if (node == NULL)
     {
@@ -27,7 +27,7 @@ int max(int a, int b)
 }
 
 // Creating Node
-struct Node *newNode(int data)
+Node *newNode(int data)
 {
     Node *node = (Node *)malloc(sizeof(Node));
     node->data = data;
@@ -38,10 +38,10 @@ struct Node *newNode(int data)
 }
 
 // Right Rotate
-struct Node *rightRotate(Node *y)
+Node *rightRotate(Node *y)
 {
-    struct Node *x = y->left;
-    struct Node *T2 = x->right;
+    Node *x = y->left;
+    Node *T2 = x->right;
 
     // Perform rotation
     x->right = y;
@@ -56,7 +56,7 @@ struct Node *rightRotate(Node *y)
 }
 
 // Left Rotate
-struct Node *leftRotate(Node *x)
+Node *leftRotate(Node *x)
 {
     Node *y = x->right;
     Node *T2 = y->left;
@@ -84,64 +84,64 @@ int getBalance(Node *node)
 }
 
 // Insertion
-struct Node *insertNode(Node *root, int data)
+Node *insertNode(Node *node, int data)
 {
     // Find the correct position to insert the node
-    if (root == NULL)
+    if (node == NULL)
     {
         return (newNode(data));
     }
-    if (data < root->data)
+    if (data < node->data)
     {
-        root->left = insertNode(root->left, data);
+        node->left = insertNode(node->left, data);
     }
-    else if (data > root->data)
+    else if (data > node->data)
     {
-        root->right = insertNode(root->right, data);
+        node->right = insertNode(node->right, data);
     }
     else
     {
-        return (root);
+        return (node);
     }
     // updating the balance factor of each node and also balance the tree
 
-    root->height = 1 + max(height(root->left), height(root->right));
+    node->height = 1 + max(height(node->left), height(node->right));
 
-    int balance = getBalance(root);
+    int balance = getBalance(node);
 
-    if (balance > 1 && data < root->left->data)
+    if (balance > 1 && data < node->left->data)
     {
-        return rightRotate(root);
+        return rightRotate(node);
     }
-    if (balance < -1 && data > root->right->data)
+    if (balance < -1 && data > node->right->data)
     {
-        return leftRotate(root);
+        return leftRotate(node);
     }
-    if (balance > 1 && data > root->left->data)
+    if (balance > 1 && data > node->left->data)
     {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
     }
-    if (balance < -1 && data < root->right->data)
+    if (balance < -1 && data < node->right->data)
     {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
-    }
-    return root;
-}
-
-struct Node *minValueNode(Node *root)
-{
-    Node *node = root;
-    while (node->left != NULL)
-    {
-        node = node->left;
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
     }
     return node;
 }
 
+Node *minValueNode(Node *node)
+{
+    Node *current = node;
+    while (current->left != NULL)
+    {
+        current = current->left;
+    }
+    return current;
+}
+
 // deleting node
-struct Node *deleteNode(Node *root, int data)
+Node *deleteNode(Node *root, int data)
 {
     if (root == NULL)
     {
@@ -220,20 +220,33 @@ void printPreOrder(Node *root)
 int main()
 {
     Node *root = NULL;
-    root = insertNode(root, 2);
-    root = insertNode(root, 1);
-    root = insertNode(root, 7);
-    root = insertNode(root, 4);
-    root = insertNode(root, 5);
-    root = insertNode(root, 3);
-    root = insertNode(root, 8);
 
-    printPreOrder(root);
+    int option = -1;
+    int data = -1;
 
-    // root = deleteNode(root, 2);
+    while (option != 4)
+    {
+        printf("Enter the option below \n 1. Insert the new data \n 2. Delete a data \n 3. Print the list \n 4. Exit the program \n");
+        scanf("%d", &option);
 
-    // printf("\n After deleting : \n");
-    // printPreOrder(root);
-
+        switch (option)
+        {
+        case 1:
+            printf("Enter data to insert \n");
+            scanf("%d", &data);
+            root = insertNode(root, data);
+            break;
+        case 2:
+            printf("Enter data to delete \n");
+            scanf("%d", &data);
+            root = deleteNode(root, data);
+            break;
+        case 3:
+            printPreOrder(root);
+            break;
+        default:
+            break;
+        }
+    }
     return 0;
 }
